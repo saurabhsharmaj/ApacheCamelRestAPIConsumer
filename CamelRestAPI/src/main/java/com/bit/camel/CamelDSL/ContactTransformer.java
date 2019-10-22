@@ -1,21 +1,24 @@
 package com.bit.camel.CamelDSL;
 
-import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.core.type.TypeReference;
+import com.bit.camel.CamelDSL.model.Response;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Component
 public class ContactTransformer {
-
+	AtomicInteger count = new AtomicInteger();
     @Autowired
     ObjectMapper objectMapper;
 
-    public List<Contact> transform(String jsonString) throws Exception {
-        List<Contact> accounts = objectMapper.readValue(jsonString, new TypeReference<List<Contact>>(){});
-        return accounts;
+    public Response transform(String jsonString) throws Exception {
+    	count.getAndIncrement();
+    	System.out.println(count.get() +" --> "+ jsonString);
+        //List<Contact> accounts = objectMapper.readValue(jsonString, new TypeReference<List<Contact>>(){});
+    	Response response = objectMapper.readValue(jsonString, Response.class);
+        return response;
     }
 }
